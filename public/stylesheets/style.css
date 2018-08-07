@@ -1,0 +1,88 @@
+
+.mt-50 {
+  margin-top: 50px;
+}
+.pt-20 {
+  padding-top: 20px;
+}
+body {
+  background-color: #fafafa;
+}
+.container {
+  max-width: 960px;
+}
+.navbar {
+  height: 70px;
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0,0,0,.0975);
+}
+.navbar-brand {
+  color: #003569 !important;
+}
+#searchbar {
+  margin-left: auto;
+}
+#searchbar input {
+  height: 30px;
+}
+.main {
+  padding:50px 0px;
+}
+.profile {
+  border-radius: 50%;
+}
+.nZSzR {
+  margin-bottom: 20px;
+}
+.nZSzR h1 {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 200;
+}
+.section.main {
+  color: #262626;
+}
+@media (min-width: 736px) {
+  .AC5d8 {
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 200;
+  }
+}
+.AC5d8 {
+  font-weight: 200;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 200;
+}
+.post-num {
+  color: #262626;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.post-group {
+  border-top: 1px solid rgba(0,0,0,.0975);
+}
+.post-img {
+  width: 100%;
+  height: 100%;
+}
+.video-mark {
+  position: absolute;
+  right: 12px;
+  fill: white;
+}
+.post-wrapper {
+  padding: 10px;
+}
+@media (max-width: 960px) {
+  .post-wrapper {
+    height: 33vw;
+  }
+}
+@media (min-width: 960px) {
+  .post-wrapper {
+    height: 320px;
+  }
+}

@@ -1,0 +1,110 @@
+extends layout
+
+block content
+  .row
+    .col-lg-4.col-md-4.col-sm-12.text-center
+      img.profile(src="/img/profile.jpg", alt="...")
+    .col-lg-8.col-md-8.col-sm-12
+      div.nZSzR
+        span.AC5d8  #{name}
+      div
+        span.post-num 128
+        &nbsp
+        span posts
+  .row.mt-50.pt-20.post-group
+    - for(let i = 0; i < data.length; i++) {
+        - if(data[i].ext == 'mp4'){
+            .col-lg-4.col-md-4.col-sm-4.col-xs-4.col-4.text-center.post-wrapper
+              a.video-link(href="javascript:void(0);" data-video="#{data[i].src}" data-img="#{data[i].thumb}" target="_blank")
+                img.video-mark(src="/img/video.svg")
+                img.post-img(src="#{data[i].thumb}" class="rounded" alt="...")
+        - } else if(data[i].ext == 'jpg') {
+            .col-lg-4.col-md-4.col-sm-4.col-xs-4.col-4.text-center.post-wrapper
+              a.img-link(href="javascript:void(0);" data-img="#{data[i].src}" target="_blank")
+                img.post-img(src="#{data[i].src}" class="rounded" alt="...")
+        - }
+    - }    
+  
+  .modal.fade.img-modal-lg(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel', aria-hidden='true')
+    .modal-dialog.modal-lg
+      .modal-content
+        img#modal-img(src="/result/djkhaled/16.jpg" class="rounded" alt="...")
+  .modal.fade.video-modal-lg(tabindex='-1', role='dialog', aria-labelledby='myLargeModalLabel', aria-hidden='true')
+    .modal-dialog.modal-lg
+      .modal-content
+        video(poster="" id="player" playsinline controls)
+          source(src="" type="video/mp4")
+
+block script
+  script(src="plyr/plyr.min.js")
+  script.
+    var player, user = '#{name}';
+    var page = 1, isLoading = false;
+    var refresh = function() {
+      $('.img-link').off();
+      $('.video-link').off();
+      $('.img-link').on('click', function() {
+        $('#modal-img').attr('src', $(this).data('img'));
+        $('.img-modal-lg').modal('toggle')
+      })
+      $('.video-link').on('click', function() {
+        $('#player').attr('poster', $(this).data('img'));
+        $('#player source').attr('src', $(this).data('video'));
+        $('.video-modal-lg').modal('toggle')
+        player = new Plyr('#player');
+      })
+
+      $('.video-modal-lg').on('hidden.bs.modal', function (e) {
+        if(player)
+          player.destroy();
+      })
+    }
+    refresh();
+
+    $(window).scroll(function() {
+      if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+        if(!isLoading) {
+          isLoading = true;
+          $.ajax({
+            url: '/'+user+'/',
+            type: 'POST',
+            data: {
+              page: ++page
+            },
+            success: function(res) {
+              isLoading = false;
+              if(!res.isSuccess) {
+                return;
+              }
+              var ht = '';
+              for(var i = 0; i < res.data.length; i++) {
+                if(res.data[i].ext == 'mp4') {
+                  ht += `
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-4 text-center post-wrapper">
+                      <a class="video-link" href="javascript:void(0);" data-video="`+res.data[i].src+`" data-img="`+res.data[i].thumb+`" target="_blank">
+                        <img class="video-mark" src="/img/video.svg">
+                        <img class="post-img rounded" src="`+res.data[i].thumb+`" alt="...">
+                      </a>
+                    </div>
+                  `;
+                } else if(res.data[i].ext == 'jpg') {
+                  ht += `
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-4 text-center post-wrapper">
+                      <a class="video-link" href="javascript:void(0);" data-video="`+res.data[i].src+`" target="_blank">
+                        <img class="post-img rounded" src="`+res.data[i].src+`" alt="...">
+                      </a>
+                    </div>
+                  `;
+                }
+              }
+              if(res.data.length == 0) {
+                // Not to call further.
+                isLoading = true;
+              }
+              $('.post-group').append(ht);
+              refresh();
+            }
+          })
+        }
+      }
+    });
